@@ -1,0 +1,63 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="41">
+            <item index="0" class="java.lang.String" itemvalue="memcache" />
+            <item index="1" class="java.lang.String" itemvalue="cachetools" />
+            <item index="2" class="java.lang.String" itemvalue="mysql" />
+            <item index="3" class="java.lang.String" itemvalue="requests" />
+            <item index="4" class="java.lang.String" itemvalue="shap" />
+            <item index="5" class="java.lang.String" itemvalue="sqlalchemy" />
+            <item index="6" class="java.lang.String" itemvalue="mysql-connector-python" />
+            <item index="7" class="java.lang.String" itemvalue="Flask" />
+            <item index="8" class="java.lang.String" itemvalue="numpy" />
+            <item index="9" class="java.lang.String" itemvalue="torch" />
+            <item index="10" class="java.lang.String" itemvalue="Pillow" />
+            <item index="11" class="java.lang.String" itemvalue="faiss-gpu" />
+            <item index="12" class="java.lang.String" itemvalue="nginx" />
+            <item index="13" class="java.lang.String" itemvalue="gevent" />
+            <item index="14" class="java.lang.String" itemvalue="pydantic" />
+            <item index="15" class="java.lang.String" itemvalue="wheel" />
+            <item index="16" class="java.lang.String" itemvalue="pymysqlpool" />
+            <item index="17" class="java.lang.String" itemvalue="boto3" />
+            <item index="18" class="java.lang.String" itemvalue="pikepdf" />
+            <item index="19" class="java.lang.String" itemvalue="nltk" />
+            <item index="20" class="java.lang.String" itemvalue="psutil" />
+            <item index="21" class="java.lang.String" itemvalue="concurrent-log-handler" />
+            <item index="22" class="java.lang.String" itemvalue="xfeat" />
+            <item index="23" class="java.lang.String" itemvalue="torchmetrics" />
+            <item index="24" class="java.lang.String" itemvalue="pytorch_frame" />
+            <item index="25" class="java.lang.String" itemvalue="openfe" />
+            <item index="26" class="java.lang.String" itemvalue="setuptools" />
+            <item index="27" class="java.lang.String" itemvalue="catboost" />
+            <item index="28" class="java.lang.String" itemvalue="autogluon" />
+            <item index="29" class="java.lang.String" itemvalue="kaggle" />
+            <item index="30" class="java.lang.String" itemvalue="tensorflow" />
+            <item index="31" class="java.lang.String" itemvalue="category-encoders" />
+            <item index="32" class="java.lang.String" itemvalue="GRANDE" />
+            <item index="33" class="java.lang.String" itemvalue="rtdl_revisiting_models" />
+            <item index="34" class="java.lang.String" itemvalue="matplotlib" />
+            <item index="35" class="java.lang.String" itemvalue="torchcontrib" />
+            <item index="36" class="java.lang.String" itemvalue="lightgbm" />
+            <item index="37" class="java.lang.String" itemvalue="torcheval" />
+            <item index="38" class="java.lang.String" itemvalue="xgboost" />
+            <item index="39" class="java.lang.String" itemvalue="rtdl_num_embeddings" />
+            <item index="40" class="java.lang.String" itemvalue="optuna" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N803" />
+          <option value="N806" />
+          <option value="N802" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
