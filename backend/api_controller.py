@@ -5,9 +5,10 @@ import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utilities import search_candidates, rank_candidates_with_llm, parse_response
 from extractor import PDFExtractionAgent
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 with open(r"E:\QHack\profiles.json", "r") as f:
     all_profiles = json.load(f)
 

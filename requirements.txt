@@ -4,3 +4,4 @@ sentence_transformers
 flask
 openai
 pymupdf
+flask_cors
