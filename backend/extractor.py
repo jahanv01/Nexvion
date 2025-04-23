@@ -28,6 +28,7 @@ Extract structured project information from the following text.
 
 Return a JSON object with the keys:
 - name
+- location
 - industry
 - projectName
 - projectDescription
