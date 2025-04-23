@@ -4,6 +4,7 @@ import sys
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utilities import search_candidates, rank_candidates_with_llm, parse_response
+from extractor import PDFExtractionAgent
 
 app = Flask(__name__)
 
@@ -15,10 +16,21 @@ profile_map = {profile["name"]: profile for profile in all_profiles}
 
 @app.route('/submit', methods=['POST'])
 def submit_data():
-    data = request.get_json()
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
 
-    project = data['projectDescription']
-    requirements = data['requirements']
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    if file and file.filename.endswith('.pdf'):
+        agent = PDFExtractionAgent()
+        result = agent.run(file)
+
+    project = result['projectDescription']
+    requirements = result['requirements']
+
     results = []
 
     for req in requirements:

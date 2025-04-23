@@ -3,3 +3,4 @@ qdrant_client
 sentence_transformers
 flask
 openai
+pymupdf

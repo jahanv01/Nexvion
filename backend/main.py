@@ -1,28 +1,20 @@
 import requests
 
-url = "http://localhost:5001/submit"
+# Replace this with the actual path to your PDF
+file_path = r"C:\Users\chintan.v\Downloads\Project Application Overview.pdf"
 
-data = {
-    "name": "AutoTech Innovations GmbH",
-    "industry": "Automotive",
-    "projectName": "Smart Vehicle Connectivity Platform",
-    "projectDescription": "AutoTech Innovations GmbH aims to be a pioneer in the automotive sector, focusing on developing a cutting-edge smart vehicle connectivity platform. The project intends to revolutionize the way vehicles communicate by incorporating advanced IoT integration. The platform will facilitate real-time monitoring and predictive maintenance using large-scale data analytics. Furthermore, cybersecurity is a paramount focus, as automakers increasingly face threats that could compromise vehicle functionality and integrity. To enhance driver interaction, the project also plans to deploy user-centric interfaces powered by intuitive design principles. These innovations are expected to elevate both vehicle intelligence and driver engagement.",
-    "budget": "90000",
-    "startDate": "2025-04-23",
-    "endDate": "2025-05-30",
-    "requirements": [
-        {
-            "skill": "IoT Development",
-            "amount": "3",
-            "recommendedSeniority": "Mid-Level"
-        },
-        {
-            "skill": "Cybersecurity Analysis",
-            "amount": "2",
-            "recommendedSeniority": "Senior"
-        }
-    ]
+# Your API endpoint
+url = 'http://localhost:5001/submit'  # Change to your actual API endpoint
+
+# Prepare the file for upload
+files = {
+    'file': ('sample.pdf', open(file_path, 'rb'), 'application/pdf')
 }
 
-response = requests.post(url, json=data)
-print(response.json())
+
+# Send the POST request
+response = requests.post(url, files=files)
+
+# Print the response
+print(f"Status Code: {response.status_code}")
+print(f"Response JSON: {response.json()}")
