@@ -18,7 +18,7 @@ COLLECTION_NAME = "Consultant_Profiles"
 def create_collection():
 
     # Load JSON profiles
-    with open(r"E:\QHack\profiles.json", "r", encoding="utf-8") as f:
+    with open(r"../profiles.json", "r", encoding="utf-8") as f:
         profiles = json.load(f)
 
     vector_size = embedder.get_sentence_embedding_dimension()
@@ -53,18 +53,18 @@ def embed_text(text):
     vector = embedder.encode(text).tolist()
     return vector
 
-def search_candidates(project_description, skill, seniority, top_k=20):
+def search_candidates(project_description, skill, seniority, top_k):
     query_vector = embed_text(project_description)
 
     return client.search(
     collection_name=COLLECTION_NAME,
     query_vector=query_vector,
-    limit=top_k
+    limit=int(top_k)*2
 )
 
 import openai
 
-def rank_candidates_with_llm(project_description, skill, seniority, amount, candidates):
+def rank_candidates_with_llm(project_description, skill, seniority, location, amount, candidates):
     # Step 1: Prepare and format candidate profiles
     formatted_profiles = ""
     for idx, c in enumerate(candidates, 1):
@@ -75,19 +75,22 @@ def rank_candidates_with_llm(project_description, skill, seniority, amount, cand
             f"   Seniority: {p.get('seniority', '')}\n"
             f"   Description: {p.get('description', '')}\n"
             f"   Technologies: {', '.join(p.get('technologies', []))}\n"
+            f"   Languages Spoken: {', '.join(p.get('languages_spoken', []))}\n"
         )
         formatted_profiles += profile_str + "\n"
 
     # Step 2: Build prompt
     system_prompt = """
-You are an expert technical recruiter. Based on the project description and a list of consultants, rank the ones who best fit the specified role.
+You are an expert technical recruiter. Based on the project description and location and a list of consultants, 
+rank the ones who best fit the specified role based on skills, personal description and languages spoken.
 {"response": [{"name": "Consultant Name", "reason": "Why they are a good fit"}, ...]}
     """.strip()
 
     user_prompt = f"""
 Project Description:
 {project_description}
-
+Location: 
+{location}
 Requirement: {skill} ({seniority}) — Need {amount} consultant(s)
 
 Consultant Profiles:

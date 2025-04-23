@@ -9,7 +9,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-with open(r"E:\QHack\profiles.json", "r") as f:
+with open(r"../profiles.json", "r") as f:
     all_profiles = json.load(f)
 
 # Create a quick lookup for name -> full profile
@@ -31,7 +31,7 @@ def submit_data():
 
     project = result['projectDescription']
     requirements = result['requirements']
-
+    location = result['location']
     results = []
 
     for req in requirements:
@@ -43,7 +43,7 @@ def submit_data():
         matched_candidates = search_candidates(vector_query, skill, seniority, top_k=amount)
 
         # Step 2: Rank using LLM
-        top_ranked = rank_candidates_with_llm(project, skill, seniority, amount, matched_candidates)
+        top_ranked = rank_candidates_with_llm(project, skill, seniority, location, amount, matched_candidates)
 
         response = parse_response(top_ranked.choices[0].message.content)
 
