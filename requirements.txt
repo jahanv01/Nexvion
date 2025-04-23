@@ -1,0 +1,4 @@
+langchain
+qdrant_client
+sentence_transformers
+flask
