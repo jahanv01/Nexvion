@@ -1,7 +1,7 @@
 import requests
 
 # Replace this with the actual path to your PDF
-file_path = r"C:\Users\chintan.v\Downloads\Project Application Overview.pdf"
+file_path = r"C:\Users\49160\Downloads\Project Application Overview.pdf"
 
 # Your API endpoint
 url = 'http://localhost:5001/submit'  # Change to your actual API endpoint
