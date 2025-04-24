@@ -88,8 +88,11 @@ An AI-powered staffing system that compresses a **week-long manual process into 
     ```bash
     python api_controller.py
 
-## 💡 Final Notes
+### 💡 Final Notes
 
 - Ensure you have **Python**, **Node.js**, and **npm** installed on your system.
 - Keep both **frontend** and **backend** terminals running during development.
 - You may adjust the **folder paths** if your local directory structure is different.
+
+### 🎯 Closing Statement
+This project showcases how intelligent agents can revolutionize the staffing process—making it faster, smarter, and more scalable. By leveraging Multi-Agent AI, we take a bold step toward the future of work. Let’s build systems that not only connect people to projects, but empower them to thrive.
