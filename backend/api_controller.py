@@ -9,7 +9,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-with open(r"../profiles.json", "r") as f:
+with open(r"../profiles.json", "r", encoding="utf-8") as f:
     all_profiles = json.load(f)
 
 # Create a quick lookup for name -> full profile
