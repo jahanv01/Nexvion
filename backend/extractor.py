@@ -57,9 +57,6 @@ TEXT:
             temperature=0.3
         )
 
-        # Debugging: Print raw response
-        print("Raw Response:", response)
-
         # Extract the content inside the code block (strip the ` json ...  `)
         raw_content = response.choices[0].message.content
         json_str = raw_content.strip("```json\n").strip("```")

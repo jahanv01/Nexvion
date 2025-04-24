@@ -16,7 +16,6 @@ client = QdrantClient(
 COLLECTION_NAME = "Consultant_Profiles"
 
 def create_collection():
-
     # Load JSON profiles
     with open(r"../profiles.json", "r", encoding="utf-8") as f:
         profiles = json.load(f)

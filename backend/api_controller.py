@@ -47,7 +47,7 @@ def submit_data():
         top_ranked = rank_candidates_with_llm(project, skill, seniority, location, amount, matched_candidates)
 
         response = parse_response(top_ranked.choices[0].message.content)
-        print("response", response)
+
         for entry in response:
             if entry:
                 name = entry["name"]
@@ -60,7 +60,7 @@ def submit_data():
             "skill": skill,
             "ranked_candidates": response
         })
-    print(results)
+
     return jsonify({"matched_consultants": results}), 200
 
 if __name__ == '__main__':
