@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, MapPin, CheckCircle, Clock } from "lucide-react";
+import { Plus, MapPin, CheckCircle, Clock, CircleX } from "lucide-react";
 import Form from "./Form"; // Ensure this component exists and is styled appropriately
 
 const statusIcons = {
@@ -100,7 +100,7 @@ const Project = () => {
 
 
   return (
-    <div className="min-h-screen bg-white text-white flex flex-col items-center px-4 py-30">
+    <div className="min-h-[87vh] bg-black text-white flex flex-col items-center px-4">
    {/*   <h1 className="text-4xl font-bold mb-10 tracking-wide text-center border-b-4 border-slate-600 pb-3 w-full max-w-4xl">
         🚀 Innovative Project Applications
       </h1>
@@ -199,12 +199,12 @@ const Project = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-5 rounded-lg shadow-3xl w-full max-w-md relative">
+          <div className="bg-white p-5 rounded-lg shadow-3xl w-full max-w-md relative">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl"
+              className="absolute top-1 right-1 text-black hover:text-black text-2xl"
             >
-              &times;
+             <CircleX strokeWidth={4} />
             </button>
             <Form />
           </div>

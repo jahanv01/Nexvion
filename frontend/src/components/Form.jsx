@@ -108,7 +108,7 @@ export default function FileUploadComponent() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-200 p-4">
+    <div className="flex items-center justify-center min-h-[85vh] bg-black p-4">
       <div className="w-full max-w-md">
         {/* Card container */}
         <div className="bg-slate-800 rounded-2xl shadow-2xl overflow-hidden">
@@ -239,7 +239,7 @@ export default function FileUploadComponent() {
         </div>
         
         {/* Additional info */}
-        <p className="text-center text-slate-500 text-sm mt-4">
+        <p className="text-center text-white text-sm mt-4">
           Make sure your PDF is legible and under 10MB
         </p>
       </div>

@@ -47,7 +47,7 @@ def submit_data():
         top_ranked = rank_candidates_with_llm(project, skill, seniority, location, amount, matched_candidates)
 
         response = parse_response(top_ranked.choices[0].message.content)
-
+        print("response", response)
         for entry in response:
             if entry:
                 name = entry["name"]

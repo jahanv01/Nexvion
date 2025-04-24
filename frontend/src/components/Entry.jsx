@@ -24,11 +24,11 @@ export default function Entry() {
  navigate('/projects');
   }
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-black text-white flex items-center justify-center">
+    <div className="relative h-[87vh] w-full overflow-hidden bg-black text-white flex items-center justify-center">
       <ThreeScene />
 
       <motion.div
-        className="relative z-10 text-center px-4 md:px-12 max-w-3xl"
+        className="absolute z-10 text-center px-4 md:px-12 max-w-3xl"
         variants={container}
         initial="hidden"
         animate="show"
@@ -60,7 +60,7 @@ export default function Entry() {
         </motion.p>
 
         <motion.div variants={item}>
-          <button className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-2xl text-white font-semibold shadow-lg transition-all" onClick={handleStart}>
+          <button className="bg-slate-600 hover:bg-slate-700 px-6 py-3 rounded-2xl text-white font-semibold shadow-lg transition-all" onClick={handleStart}>
             Get Started
           </button>
         </motion.div>

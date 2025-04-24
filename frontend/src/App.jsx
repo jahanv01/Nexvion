@@ -5,6 +5,7 @@ import Form from './components/Form'
 import Home from './components/Home'
 import Entry from './components/Entry'
 import Project from './components/Project'
+import Result from './components/Result'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
      <Route path="/home" element={<Home />} />
      <Route path="/form" element={<Form />} />
      <Route path="/projects" element={<Project />} />
+     <Route path="/result" element={<Result />} />
     </Route>
 </Routes>
   )
