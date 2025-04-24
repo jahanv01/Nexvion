@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, MapPin, CheckCircle, Clock } from "lucide-react";
+import Form from "./Form"; // Ensure this component exists and is styled appropriately
+
+const statusIcons = {
+  Submitted: <CheckCircle className="w-4 h-4 mr-1 text-green-400" />,
+  "Under Review": <Clock className="w-4 h-4 mr-1 text-yellow-400" />,
+  Approved: <CheckCircle className="w-4 h-4 mr-1 text-blue-400" />,
+};
 
 const Project = () => {
-  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const projects = [
     {
@@ -91,86 +98,118 @@ const Project = () => {
     }
   ];
 
+
   return (
-    <div className="max-w-7xl mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {projects.map((data, idx) => {
-        const [showDesc, setShowDesc] = useState(false);
-        const application = data.projectApplication;
-        const { applicationStatus, businessDetails, projectDetails } = application;
+    <div className="min-h-screen bg-white text-white flex flex-col items-center px-4 py-30">
+   {/*   <h1 className="text-4xl font-bold mb-10 tracking-wide text-center border-b-4 border-slate-600 pb-3 w-full max-w-4xl">
+        🚀 Innovative Project Applications
+      </h1>
+*/}
+      <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {projects.map((data, idx) => {
+          const [showDesc, setShowDesc] = useState(false);
+          const application = data.projectApplication;
+          const { applicationStatus, businessDetails, projectDetails } = application;
 
-        return (
-          <div
-            key={idx}
-            className="bg-white rounded-2xl shadow-lg p-4 border border-gray-200 text-sm"
-          >
-            <h2 className="text-lg font-semibold mb-1">{projectDetails.projectName}</h2>
-            <p className="text-gray-500 mb-2">Status: {applicationStatus}</p>
+          return (
+            <div
+              key={idx}
+              className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group"
+            >
+              {/* Header: Project Name + Status */}
+              <div className="flex items-center justify-between border-b border-slate-600 pb-2 mb-3">
+                <h2 className="text-xl font-semibold text-white">
+                  {projectDetails.projectName}
+                </h2>
+                <div className="flex items-center bg-slate-700/50 text-sm text-white px-3 py-1 rounded-full">
+                  {statusIcons[applicationStatus] || <MapPin className="w-4 h-4 mr-1" />}
+                  <span className="px-1">{applicationStatus}</span>
+                </div>
+              </div>
 
-            <div className="mb-2">
-              <h3 className="font-medium">Company</h3>
-              <p className="text-gray-700">{businessDetails.name}</p>
-              <p className="text-gray-500">
-                {businessDetails.industry} | {businessDetails.location}
-              </p>
-              <a
-                href={businessDetails.website}
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-600 hover:underline"
-              >
-                Website
-              </a>
-            </div>
-
-            <div className="mb-2">
-              <h3 className="font-medium">Contact</h3>
-              <p>{businessDetails.contactPerson.name}</p>
-              <p className="text-gray-500">{businessDetails.contactPerson.email}</p>
-              {businessDetails.contactPerson.phone && (
-                <p className="text-gray-500">{businessDetails.contactPerson.phone}</p>
-              )}
-            </div>
-
-            <div className="mb-2">
-              <button
-                onClick={() => setShowDesc(!showDesc)}
-                className="text-blue-600 hover:underline"
-              >
-                {showDesc ? "Hide Description" : "Show Description"}
-              </button>
-              {showDesc && (
-                <p className="text-gray-700 mt-1 whitespace-pre-line">
-                  {projectDetails.description}
-                </p>
-              )}
-            </div>
-
-            <div className="mb-2">
-              <h3 className="font-medium">Requirements</h3>
-              <ul className="list-disc list-inside">
+              {/* Chips */}
+              <div className="flex flex-wrap gap-2 text-xs font-medium text-white mb-3">
                 {projectDetails.requirements.map((req, index) => (
-                  <li key={index}>
+                  <div
+                    key={index}
+                    className="bg-slate-700/60 px-3 py-1 rounded-full"
+                  >
                     {req.amount}x {req.skill} ({req.recommendedSeniority})
-                  </li>
+                  </div>
                 ))}
-              </ul>
-            </div>
+                <div className="bg-slate-700/60 px-3 py-1 rounded-full">
+                  💰 €{projectDetails.budget.toLocaleString()}
+                </div>
+                <div className="bg-slate-700/60 px-3 py-1 rounded-full">
+                  📅 {projectDetails.startDate} → {projectDetails.endDate}
+                </div>
+              </div>
 
-            <div className="flex flex-col gap-1 text-gray-600">
-              <p><strong>Budget:</strong> €{projectDetails.budget.toLocaleString()}</p>
-              <p><strong>Duration:</strong> {projectDetails.startDate} to {projectDetails.endDate}</p>
-            </div>
-          </div>
-        );
-      })}
+              {/* Company & Contact Info */}
+              <div className="text-sm text-slate-300 space-y-3 mb-4">
+                <div className="space-y-0.5">
+                  <p className="font-semibold text-lg text-white">{businessDetails.name}</p>
+                  <p className="text-slate-400">{businessDetails.industry} | {businessDetails.location}</p>
+                  <a
+                    href={businessDetails.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block text-blue-400 hover:underline text-sm"
+                  >
+                    🌐 Visit Website
+                  </a>
+                </div>
 
-      {/* Add Project Card */}
-      <div
-        onClick={() => navigate("/form")}
-        className="flex items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer hover:bg-gray-50 transition-all"
-      >
-        <Plus className="w-10 h-10 text-gray-400" />
+                <div className="border-t border-slate-600 pt-3 space-y-1">
+                  <p className="font-semibold text-white">📞 Contact</p>
+                  <p className="text-white">{businessDetails.contactPerson.name}</p>
+                  <p className="text-slate-300">{businessDetails.contactPerson.email}</p>
+                  {businessDetails.contactPerson.phone && (
+                    <p className="text-slate-300">{businessDetails.contactPerson.phone}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <button
+                  onClick={() => setShowDesc(!showDesc)}
+                  className="text-blue-300 text-sm underline underline-offset-4 hover:text-blue-400 transition-colors"
+                >
+                  {showDesc ? "Hide Description" : "Show Description"}
+                </button>
+                {showDesc && (
+                  <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+                    {projectDetails.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Add Project Card */}
+        <div
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center justify-center border-2 border-dashed p-5 border-slate-200 rounded-2xl bg-slate-800  hover:border-slate-400 hover:bg-slate-700/30 transition-all cursor-pointer h-64"
+        >
+          <Plus className="w-12 h-12 text-white opacity-50 group-hover:opacity-100 transition-opacity" />
+        </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-5 rounded-lg shadow-3xl w-full max-w-md relative">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl"
+            >
+              &times;
+            </button>
+            <Form />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

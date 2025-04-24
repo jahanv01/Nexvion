@@ -8,6 +8,7 @@ from extractor import PDFExtractionAgent
 from flask_cors import CORS
 
 app = Flask(__name__)
+
 CORS(app)
 with open(r"../profiles.json", "r", encoding="utf-8") as f:
     all_profiles = json.load(f)
@@ -48,11 +49,12 @@ def submit_data():
         response = parse_response(top_ranked.choices[0].message.content)
 
         for entry in response:
-            name = entry["name"]
-            if name in profile_map:
-                entry["metadata"] = profile_map[name]
-            else:
-                entry["metadata"] = ""
+            if entry:
+                name = entry["name"]
+                if name in profile_map:
+                    entry["metadata"] = profile_map[name]
+                else:
+                    entry["metadata"] = ""
 
         results.append({
             "skill": skill,
@@ -62,4 +64,4 @@ def submit_data():
     return jsonify({"matched_consultants": results}), 200
 
 if __name__ == '__main__':
-    app.run(port=5001)
+    app.run(port=5002)

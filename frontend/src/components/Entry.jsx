@@ -1,36 +1,70 @@
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import ThreeScene from './ThreeScene'
+import { motion } from 'framer-motion'
+import { Typewriter } from 'react-simple-typewriter'
+import { useNavigate } from 'react-router-dom';
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2
+    }
+  }
+}
 
-export default function EntryScreen() {
+const item = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0 }
+}
+
+export default function Entry() {
   const navigate = useNavigate();
-
-  const handleStart = () => {
-    navigate("/projects");
-  };
-
+  const handleStart = ()=>{
+ navigate('/projects');
+  }
   return (
-    <div className="h-screen w-full bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center">
+    <div className="relative h-screen w-full overflow-hidden bg-black text-white flex items-center justify-center">
+      <ThreeScene />
+
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="bg-white rounded-2xl shadow-xl p-10 max-w-xl text-center space-y-6"
+        className="relative z-10 text-center px-4 md:px-12 max-w-3xl"
+        variants={container}
+        initial="hidden"
+        animate="show"
       >
-        <h1 className="text-4xl font-bold text-gray-800">
-          MatchWise
-        </h1>
-        <p className="text-gray-600 text-lg">
-          Smartly match consultants to the right projects.
-        </p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleStart}
-          className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl shadow-md hover:bg-indigo-700 transition duration-300"
+        <motion.h1
+          variants={item}
+          className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight"
         >
-          Start
-        </motion.button>
+          Smart Staffing<br className="hidden md:block" /> with AI Agents
+        </motion.h1>
+
+        <motion.p
+          variants={item}
+          className="text-lg md:text-xl text-gray-300 mb-8"
+        >
+          <Typewriter
+            words={[
+              'Connect consultants to projects.',
+              'Leverage AI for smart staffing.',
+              'Build dynamic, intelligent partnerships.',
+            ]}
+            loop={true}
+            cursor
+            cursorStyle="_"
+            typeSpeed={40}
+            deleteSpeed={30}
+            delaySpeed={2000}
+          />
+        </motion.p>
+
+        <motion.div variants={item}>
+          <button className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-2xl text-white font-semibold shadow-lg transition-all" onClick={handleStart}>
+            Get Started
+          </button>
+        </motion.div>
       </motion.div>
     </div>
-  );
+  )
 }

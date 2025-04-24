@@ -1,172 +1,264 @@
-import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from 'react';
+import { Upload, CheckCircle, AlertCircle, ArrowUpCircle, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const Form = () => {
-
+export default function FileUploadComponent() {
+  const [file, setFile] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState(null); // 'success', 'error', or null
+  const [isUploading, setIsUploading] = useState(false);
+  const [responseData, setResponseData] = useState(null);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    industry: '',
-    projectName: '',
-    projectDescription: '',
-    budget: '',
-    startDate: '',
-    endDate: '',
-    requirements: [],
-  })
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
 
-  const handleRequirementChange = (index, field, value) => {
-    const updated = [...formData.requirements]
-    updated[index][field] = value
-    setFormData((prev) => ({ ...prev, requirements: updated }))
-  }
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-  const addRequirement = () => {
-    setFormData((prev) => ({
-      ...prev,
-      requirements: [...prev.requirements, { skill: '', amount: '', recommendedSeniority: 'Junior' }],
-    }))
-  }
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type === 'application/pdf') {
+      setFile(droppedFile);
+      setUploadStatus(null);
+    } else {
+      setUploadStatus('error');
+      setTimeout(() => setUploadStatus(null), 3000);
+    }
+  };
 
-  const removeRequirement = (index) => {
-    const updated = [...formData.requirements]
-    updated.splice(index, 1)
-    setFormData((prev) => ({ ...prev, requirements: updated }))
-  }
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type === 'application/pdf') {
+      setFile(selectedFile);
+      setUploadStatus(null);
+    } else if (selectedFile) {
+      setUploadStatus('error');
+      setTimeout(() => setUploadStatus(null), 3000);
+    }
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true);
-    console.log("form data", formData)
+  const handleUpload = async () => {
+    if (!file) {
+      setUploadStatus('error');
+      setTimeout(() => setUploadStatus(null), 3000);
+      return;
+    }
+
+    setIsUploading(true);
+    
     try {
-      const response = await fetch('http://localhost:5000/submit', {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('http://localhost:5002/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
-      if (!response.ok) throw new Error('Something went wrong')
-
-      const result = await response.json()
-     
-      alert('Submitted successfully!')
-      console.log(result)
-      if(result){
-        navigate("/home")
+        body: formData,
+      });
+      
+      if (response.ok) {
+        // Extract the JSON data from the response
+        const data = await response.json().catch(async () => {
+          console.log("Response is not JSON, getting text instead");
+          const text = await response.text();
+          return ({ text });
+        });
+        
+        console.log("Response data:", data);
+        setResponseData(data);
+        setUploadStatus('success');
+        
+        // Wait 1.5 seconds to show the success message before redirecting
+        setTimeout(() => {
+          // Pass the response data to the next page via state
+          navigate('/home', { state: { responseData: data } });
+        }, 1500);
+      } else {
+        console.error("Server returned an error:", response.status);
+        setUploadStatus('error');
+        setTimeout(() => setUploadStatus(null), 3000);
       }
     } catch (error) {
-      console.error('Submission error:', error)
-      alert('Submission failed. Try again.')
+      console.error("Upload error:", error);
+      setUploadStatus('error');
+      setTimeout(() => setUploadStatus(null), 3000);
     } finally {
-      setLoading(false);
+      setIsUploading(false);
     }
-  }
+  };
+
+  const openFileDialog = () => {
+    fileInputRef.current.click();
+  };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">Submit Project Application</h2>
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-2xl shadow-lg">
-        {/* Basic Fields */}
-        {['name', 'industry', 'projectName', 'projectDescription', 'budget'].map((field) => (
-          <div key={field}>
-            <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-              {field.replace(/([A-Z])/g, ' $1')}
-            </label>
-            <input
-              type={field === 'budget' ? 'number' : 'text'}
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+    <div className="flex items-center justify-center min-h-screen bg-slate-200 p-4">
+      <div className="w-full max-w-md">
+        {/* Card container */}
+        <div className="bg-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+          {/* Header */}
+          <div className="bg-slate-700 px-8 py-6">
+            <h2 className="text-2xl font-bold text-slate-100">Upload Your PDF</h2>
           </div>
-        ))}
-
-        {/* Requirements Section */}
-        <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-3">Requirements</label>
-          {formData.requirements.map((req, index) => (
-            <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 items-end">
+          
+          {/* Upload Area */}
+          <div className="p-8">
+            <div 
+              className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-300 ${
+                isDragging 
+                  ? 'border-slate-400 bg-slate-700' 
+                  : 'border-slate-500 bg-slate-800/50 hover:bg-slate-700/50'
+              }`}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              onClick={openFileDialog}
+            >
               <input
-                type="text"
-                placeholder="Skill"
-                value={req.skill}
-                onChange={(e) => handleRequirementChange(index, 'skill', e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 w-full"
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="application/pdf"
+                className="hidden"
               />
-              <input
-                type="number"
-                placeholder="Amount"
-                value={req.amount}
-                onChange={(e) => handleRequirementChange(index, 'amount', e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-              />
-              <select
-                value={req.recommendedSeniority}
-                onChange={(e) => handleRequirementChange(index, 'recommendedSeniority', e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-              >
-                <option value="Junior">Junior</option>
-                <option value="Mid-Level">Mid-Level</option>
-                <option value="Senior">Senior</option>
-              </select>
-              <button
-                type="button"
-                onClick={() => removeRequirement(index)}
-                className="text-sm text-red-600 hover:underline ml-1 mt-2"
-              >
-                Remove
-              </button>
+              
+              <div className="flex flex-col items-center justify-center py-6 cursor-pointer">
+                <div className={`rounded-full p-4 mb-4 transition-all ${
+                  isDragging ? 'bg-slate-600 text-slate-200' : 'bg-slate-700 text-slate-300'
+                }`}>
+                  <Upload size={36} className="animate-pulse duration-2000" />
+                </div>
+                
+                <p className="text-lg font-medium text-center text-slate-300">
+                  {file ? file.name : 'Drag & drop your PDF here or click to browse'}
+                </p>
+                <p className="mt-2 text-sm text-slate-400 text-center">
+                  PDF files only (max 10MB)
+                </p>
+              </div>
             </div>
-          ))}
-          <button
-            type="button"
-            onClick={addRequirement}
-            className="mt-2 text-blue-600 hover:underline text-sm"
-          >
-            + Add Requirement
-          </button>
+            
+            {/* File Details */}
+            {file && (
+              <div className="mt-4 bg-slate-700/50 p-4 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="p-2 bg-slate-600 rounded-lg mr-3">
+                      <svg className="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-200 truncate max-w-xs">
+                        {file.name}
+                      </p>
+                      <p className="text-xs text-slate-400">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Upload Button */}
+            <button
+              onClick={handleUpload}
+              disabled={!file || isUploading || uploadStatus === 'success'}
+              className={`mt-6 w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
+                !file || isUploading || uploadStatus === 'success'
+                  ? 'bg-slate-600 text-slate-300 cursor-not-allowed'
+                  : 'bg-slate-500 hover:bg-slate-400 text-white'
+              }`}
+            >
+              {isUploading ? (
+                <>
+                  <Loader2 className="animate-spin mr-2" size={20} />
+                  Processing...
+                </>
+              ) : uploadStatus === 'success' ? (
+                <>
+                  <CheckCircle className="mr-2" size={20} />
+                  Success
+                </>
+              ) : file ? (
+                <>
+                  <ArrowUpCircle className="mr-2" size={20} />
+                  Submit
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-2" size={20} />
+                  Upload PDF
+                </>
+              )}
+            </button>
+            
+            {/* Status Messages */}
+            {uploadStatus && (
+              <div className={`mt-4 p-4 rounded-lg flex items-center ${
+                uploadStatus === 'success' 
+                  ? 'bg-green-900/20 text-green-400' 
+                  : 'bg-red-900/20 text-red-400'
+              }`}>
+                {uploadStatus === 'success' ? (
+                  <>
+                    <CheckCircle className="mr-2" size={20} />
+                    <span>File uploaded successfully! Redirecting...</span>
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle className="mr-2" size={20} />
+                    <span>
+                      {!file 
+                        ? 'Please select a file first' 
+                        : 'Error uploading file. Please try again.'}
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Dates */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {['startDate', 'endDate'].map((field) => (
-            <div key={field}>
-              <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-                {field.replace(/([A-Z])/g, ' $1')}
-              </label>
-              <input
-                type="date"
-                name={field}
-                value={formData[field]}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+        
+        {/* Additional info */}
+        <p className="text-center text-slate-500 text-sm mt-4">
+          Make sure your PDF is legible and under 10MB
+        </p>
+      </div>
+      
+      {/* Full-screen loader overlay */}
+      {isUploading && (
+        <div className="fixed inset-0 bg-slate-900/80 flex flex-col items-center justify-center z-50">
+          <div className="bg-slate-800 p-8 rounded-xl shadow-2xl flex flex-col items-center">
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-slate-600 border-t-slate-300 rounded-full animate-spin"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <Upload size={24} className="text-slate-300" />
+              </div>
             </div>
-          ))}
+            <p className="mt-4 text-slate-300 font-medium text-lg">Uploading your document...</p>
+            <p className="text-slate-400 text-sm mt-2">This may take a moment</p>
+          </div>
         </div>
-
-        <div className="text-right">
-          <button
-            type="submit"
-            disabled={loading}
-            className={`bg-blue-600 text-white px-6 py-2 rounded-xl transition ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
-          >
-            {loading ? 'Submitting...' : 'Submit Application'}
-          </button>
-        </div>
-      </form>
+      )}
     </div>
-  )
+  );
 }
-
-export default Form
