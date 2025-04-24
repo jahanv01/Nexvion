@@ -1,11 +1,11 @@
 import qdrant_client
 import os
 import json
-import qdrant_client
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 from sentence_transformers import SentenceTransformer
 import openai
+
 
 # Load model
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
@@ -48,7 +48,6 @@ def create_collection():
     # Upload in batch
     client.upsert(collection_name="Consultant_Profiles", points=points)
 
-    # print(f"Uploaded {len(points)} profiles to Qdrant.")
 def embed_text(text):
     vector = embedder.encode(text).tolist()
     return vector
@@ -62,7 +61,6 @@ def search_candidates(project_description, skill, seniority, top_k):
     limit=int(top_k)*2
 )
 
-import openai
 
 def rank_candidates_with_llm(project_description, skill, seniority, location, amount, candidates):
     # Step 1: Prepare and format candidate profiles
