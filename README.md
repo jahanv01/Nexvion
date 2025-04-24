@@ -49,6 +49,8 @@ An AI-powered staffing system that compresses a **week-long manual process into 
 
 ## 🧪 Setup Instructions
 
+Open two separate terminals to execute the **Frontend** and **Backend** setup processes.
+
 ### 🌐 Frontend Setup
 
 1. **Change directory to the Frontend Folder:**
@@ -90,7 +92,7 @@ An AI-powered staffing system that compresses a **week-long manual process into 
 
 ### 💡 Final Notes
 
-- Ensure you have **Python**, **Node.js**, and **npm** installed on your system.
+- Ensure you have **Python** (version ≥ `3.10.0'), **Node.js** (version ≥ `v18.14.1`), and **npm** (version ≥ `9.3.1`) installed on your system.
 - Keep both **frontend** and **backend** terminals running during development.
 - You may adjust the **folder paths** if your local directory structure is different.
 
