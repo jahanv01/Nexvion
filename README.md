@@ -92,7 +92,7 @@ Open two separate terminals to execute the **Frontend** and **Backend** setup pr
 
 ### 💡 Final Notes
 
-- Ensure you have **Python** (version ≥ `3.10.0'), **Node.js** (version ≥ `v18.14.1`), and **npm** (version ≥ `9.3.1`) installed on your system.
+- Ensure you have **Python** (version ≥ `3.10.0'), Node.js (version ≥ `v18.14.1`), and npm (version ≥ `9.3.1`) installed on your system.
 - Keep both **frontend** and **backend** terminals running during development.
 - You may adjust the **folder paths** if your local directory structure is different.
 
